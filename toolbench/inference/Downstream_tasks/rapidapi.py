@@ -114,11 +114,8 @@ class rapidapi_wrapper(base_env):
 1.ALWAYS call \"Finish\" function at the end of the task. And the final answer should contain enough information to show to the user,If you can't handle the task, or you find that function calls always fail(the function is not valid now), use function Finish->give_up_and_restart.
 2.Do not use origin tool names, use only subfunctions' names.
 You have access of the following tools:\n'''
-        
-        unduplicated_reflection = {}
-        for standardize_tool_name, tool_des in tool_descriptions:
-            unduplicated_reflection[standardize_tool_name] = tool_des
 
+        unduplicated_reflection = dict(tool_descriptions)
         for k,(standardize_tool_name, tool_des) in enumerate(unduplicated_reflection.items()):
             striped = tool_des[:512].replace('\n','').strip()
             if striped == "":
@@ -131,8 +128,7 @@ You have access of the following tools:\n'''
         white_list = get_white_list(self.tool_root_dir)
         origin_tool_names = [standardize(cont["tool_name"]) for cont in data_dict["api_list"]]
         tool_des = contain(origin_tool_names,white_list)
-        tool_descriptions = [[cont["standard_tool_name"], cont["description"]] for cont in tool_des]
-        return tool_descriptions
+        return [[cont["standard_tool_name"], cont["description"]] for cont in tool_des]
     
     def retrieve_rapidapi_tools(self, query, top_k, jsons_path):
         retrieved_tools = self.retriever.retrieving(query, top_k=top_k)
@@ -145,7 +141,9 @@ You have access of the following tools:\n'''
             api_name = tool_dict["api_name"]
             if os.path.exists(jsons_path):
                 if os.path.exists(os.path.join(jsons_path, category)):
-                    if os.path.exists(os.path.join(jsons_path, category, tool_name+".json")):
+                    if os.path.exists(
+                        os.path.join(jsons_path, category, f"{tool_name}.json")
+                    ):
                         query_json["api_list"].append({
                             "category_name": category,
                             "tool_name": tool_name,
@@ -159,7 +157,14 @@ You have access of the following tools:\n'''
             cate_name = item["category_name"]
             tool_name = standardize(item["tool_name"])
             api_name = change_name(standardize(item["api_name"]))
-            tool_json = json.load(open(os.path.join(self.tool_root_dir, cate_name, tool_name + ".json"), "r"))
+            tool_json = json.load(
+                open(
+                    os.path.join(
+                        self.tool_root_dir, cate_name, f"{tool_name}.json"
+                    ),
+                    "r",
+                )
+            )
             append_flag = False
             api_dict_names = []
             for api_dict in tool_json["api_list"]:
@@ -167,13 +172,14 @@ You have access of the following tools:\n'''
                 pure_api_name = change_name(standardize(api_dict["name"]))
                 if pure_api_name != api_name:
                     continue
-                api_json = {}
-                api_json["category_name"] = cate_name
-                api_json["api_name"] = api_dict["name"]
-                api_json["api_description"] = api_dict["description"]
-                api_json["required_parameters"] = api_dict["required_parameters"]
-                api_json["optional_parameters"] = api_dict["optional_parameters"]
-                api_json["tool_name"] = tool_json["tool_name"]
+                api_json = {
+                    "category_name": cate_name,
+                    "api_name": api_dict["name"],
+                    "api_description": api_dict["description"],
+                    "required_parameters": api_dict["required_parameters"],
+                    "optional_parameters": api_dict["optional_parameters"],
+                    "tool_name": tool_json["tool_name"],
+                }
                 data_dict["api_list"].append(api_json)
                 append_flag = True
                 break
@@ -183,82 +189,72 @@ You have access of the following tools:\n'''
 
     def api_json_to_openai_json(self, api_json,standard_tool_name):
         description_max_length=256
-        templete =     {
-            "name": "",
+        pure_api_name = change_name(standardize(api_json["api_name"]))
+        templete = {
             "description": "",
             "parameters": {
                 "type": "object",
-                "properties": {
-                },
+                "properties": {},
                 "required": [],
                 "optional": [],
-            }
+            },
+            "name": f"{pure_api_name}_for_{standard_tool_name}",
         }
-        
-        map_type = {
-            "NUMBER": "integer",
-            "STRING": "string",
-            "BOOLEAN": "boolean"
-        }
-
-        pure_api_name = change_name(standardize(api_json["api_name"]))
-        templete["name"] = pure_api_name+ f"_for_{standard_tool_name}"
         templete["name"] = templete["name"][-64:]
 
         templete["description"] = f"This is the subfunction for tool \"{standard_tool_name}\", you can use this tool."
-        
+
         if api_json["api_description"].strip() != "":
             tuncated_description = api_json['api_description'].strip().replace(api_json['api_name'],templete['name'])[:description_max_length]
             templete["description"] = templete["description"] + f"The description of this function is: \"{tuncated_description}\""
         if "required_parameters" in api_json.keys() and len(api_json["required_parameters"]) > 0:
+            map_type = {
+                "NUMBER": "integer",
+                "STRING": "string",
+                "BOOLEAN": "boolean"
+            }
+
             for para in api_json["required_parameters"]:
                 name = standardize(para["name"])
                 name = change_name(name)
-                if para["type"] in map_type:
-                    param_type = map_type[para["type"]]
-                else:
-                    param_type = "string"
+                param_type = map_type.get(para["type"], "string")
                 prompt = {
                     "type":param_type,
                     "description":para["description"][:description_max_length],
                 }
 
                 default_value = para['default']
-                if len(str(default_value)) != 0:    
-                    prompt = {
-                        "type":param_type,
-                        "description":para["description"][:description_max_length],
-                        "example_value": default_value
-                    }
-                else:
+                if not str(default_value):
                     prompt = {
                         "type":param_type,
                         "description":para["description"][:description_max_length]
                     }
 
+                else:    
+                    prompt = {
+                        "type":param_type,
+                        "description":para["description"][:description_max_length],
+                        "example_value": default_value
+                    }
                 templete["parameters"]["properties"][name] = prompt
                 templete["parameters"]["required"].append(name)
             for para in api_json["optional_parameters"]:
                 name = standardize(para["name"])
                 name = change_name(name)
-                if para["type"] in map_type:
-                    param_type = map_type[para["type"]]
-                else:
-                    param_type = "string"
-
+                param_type = map_type.get(para["type"], "string")
                 default_value = para['default']
-                if len(str(default_value)) != 0:    
-                    prompt = {
-                        "type":param_type,
-                        "description":para["description"][:description_max_length],
-                        "example_value": default_value
-                    }
-                else:
+                if not str(default_value):
                     prompt = {
                         "type":param_type,
                         "description":para["description"][:description_max_length]
                     }
 
+                else:    
+                    prompt = {
+                        "type":param_type,
+                        "description":para["description"][:description_max_length],
+                        "example_value": default_value
+                    }
                 templete["parameters"]["properties"][name] = prompt
                 templete["parameters"]["optional"].append(name)
 
@@ -279,7 +275,7 @@ You have access of the following tools:\n'''
     def step(self,**args):
         obs, code = self._step(**args)
         if len(obs) > self.max_observation_length:
-            obs = obs[:self.max_observation_length] + "..."
+            obs = f"{obs[:self.max_observation_length]}..."
         return obs, code
 
     def _step(self, action_name="", action_input=""):
@@ -321,7 +317,7 @@ You have access of the following tools:\n'''
             elif json_data["return_type"] == "give_answer":
                 if "final_answer" not in json_data.keys():
                     return "{error:\"must have \"final_answer\"\"}", 2
-                
+
                 self.success = 1 # succesfully return final_answer
                 return "{\"response\":\"successfully giving the final answer.\"}", 3
             else:
@@ -354,7 +350,7 @@ You have access of the following tools:\n'''
                             response = response.json()
                         except:
                             print(response)
-                            return json.dumps({"error": f"request invalid, data error", "response": ""}), 12
+                            return json.dumps({"error": "request invalid, data error", "response": ""}), 12
                     # 1 Hallucinating function names
                     # 4 means that the model decides to pruning by itself
                     # 5 represents api call timeout
@@ -382,8 +378,8 @@ You have access of the following tools:\n'''
                     else:
                         status_code = 0
                     return json.dumps(response), status_code
-                    # except Exception as e:
-                    #     return json.dumps({"error": f"Timeout error...{e}", "response": ""}), 5
+                                # except Exception as e:
+                                #     return json.dumps({"error": f"Timeout error...{e}", "response": ""}), 5
             return json.dumps({"error": f"No such function name: {action_name}", "response": ""}), 1
 
 
@@ -393,8 +389,7 @@ class pipeline_runner:
         self.add_retrieval = add_retrieval
         self.process_id = process_id
         self.server = server
-        if not self.server: self.task_list = self.generate_task_list()
-        else: self.task_list = []
+        self.task_list = self.generate_task_list() if not self.server else []
 
     def get_backbone_model(self):
         args = self.args
@@ -451,7 +446,7 @@ class pipeline_runner:
         else:
             model = backbone_model
             llm_forward = model
-        
+
         if method.startswith("CoT"):
             passat = int(method.split("@")[-1])
             chain = single_chain(llm=llm_forward, io_func=env,process_id=process_id)
@@ -463,10 +458,8 @@ class pipeline_runner:
             pattern = r".+_w(\d+)"
             re_result = re.match(pattern,method)
             assert re_result != None
-            width = int(re_result.group(1))
-            with_filter = True
-            if "woFilter" in method:
-                with_filter = False
+            width = int(re_result[1])
+            with_filter = "woFilter" not in method
             chain = DFS_tree_search(llm=llm_forward, io_func=env,process_id=process_id, callbacks=callbacks)
             result = chain.start(
                                 single_chain_max_step=single_chain_max_step,
@@ -540,10 +533,7 @@ class pipeline_runner:
                 new_task_list.append(task)
         task_list = new_task_list
         print(f"undo tasks: {len(task_list)}")
-        if self.add_retrieval:
-            retriever = self.get_retriever()
-        else:
-            retriever = None
+        retriever = self.get_retriever() if self.add_retrieval else None
         for k, task in enumerate(task_list):
             print(f"process[{self.process_id}] doing task {k}/{len(task_list)}: real_task_id_{task[2]}")
             result = self.run_single_task(*task, retriever=retriever, process_id=self.process_id)

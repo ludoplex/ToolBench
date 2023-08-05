@@ -87,14 +87,14 @@ def preprocess(
     conv = get_conversation_template(template)
     if template == "tool-llama":
         roles = {"human": conv.roles[0], "gpt": conv.roles[1]}
-    elif template == "tool-llama-single-round" or template == "tool-llama-multi-rounds":
+    elif template in {"tool-llama-single-round", "tool-llama-multi-rounds"}:
         roles = {"system": conv.roles[0], "user": conv.roles[1], "function": conv.roles[2], "assistant": conv.roles[3]}
 
     # Apply prompt templates
     conversations = []
-    for i, source in enumerate(sources):
+    for source in sources:
         conv.messages = []
-        for j, sentence in enumerate(source):
+        for sentence in source:
             role = roles[sentence["from"]]
             conv.append_message(role, sentence["value"])
         conversations.append(conv.get_prompt())
@@ -108,7 +108,7 @@ def preprocess(
         truncation=True,
     ).input_ids
     targets = input_ids.clone()
-    
+
     # Mask targets. Only compute loss on the assistant outputs.
     sep = conv.sep + conv.roles[-1] + ": "
     for conversation, target in zip(conversations, targets):
@@ -122,7 +122,7 @@ def preprocess(
             turn_len = len(tokenizer(turn).input_ids)
 
             parts = turn.split(sep)
-            
+
             # only train on the last assistant reply, treat the history chat as instruction
             prefix = parts[:-1]
             instruction = ""
@@ -138,11 +138,6 @@ def preprocess(
             cur_len += turn_len
 
         target[cur_len:] = IGNORE_TOKEN_ID
-
-        if False:  # Inspect and check the correctness of masking
-            z = target.clone()
-            z = torch.where(z == IGNORE_TOKEN_ID, tokenizer.unk_token_id, z)
-            rank0_print(tokenizer.decode(z))
 
         if cur_len < tokenizer.model_max_length:
             if cur_len != total_len:

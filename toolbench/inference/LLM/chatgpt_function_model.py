@@ -8,11 +8,11 @@ import random
 
 @retry(wait=wait_random_exponential(min=1, max=40), stop=stop_after_attempt(3))
 def chat_completion_request(key, messages, functions=None,function_call=None,key_pos=None, model="gpt-3.5-turbo-16k-0613",stop=None,process_id=0, **args):
-    use_messages = []
-    for message in messages:
-        if not("valid" in message.keys() and message["valid"] == False):
-            use_messages.append(message)
-
+    use_messages = [
+        message
+        for message in messages
+        if "valid" not in message.keys() or message["valid"] != False
+    ]
     json_data = {
         "model": model,
         "messages": use_messages,
@@ -22,12 +22,12 @@ def chat_completion_request(key, messages, functions=None,function_call=None,key
         **args
     }
     if stop is not None:
-        json_data.update({"stop": stop})
+        json_data["stop"] = stop
     if functions is not None:
-        json_data.update({"functions": functions})
+        json_data["functions"] = functions
     if function_call is not None:
-        json_data.update({"function_call": function_call})
-    
+        json_data["function_call"] = function_call
+
     try:
         if model == "gpt-3.5-turbo-16k-0613":
             openai.api_key = key
@@ -69,7 +69,7 @@ class ChatGPTFunction:
         for message in self.conversation_history:
             print_obj = f"{message['role']}: {message['content']} "
             if "function_call" in message.keys():
-                print_obj = print_obj + f"function_call: {message['function_call']}"
+                print_obj = f"{print_obj}function_call: {message['function_call']}"
             print_obj += ""
             print(
                 colored(

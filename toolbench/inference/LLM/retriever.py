@@ -24,13 +24,11 @@ class ToolRetriever:
 
     def build_retrieval_embedder(self):
         print("Building embedder...")
-        embedder = SentenceTransformer(self.model_path)
-        return embedder
+        return SentenceTransformer(self.model_path)
     
     def build_corpus_embeddings(self):
         print("Building corpus embeddings with embedder...")
-        corpus_embeddings = self.embedder.encode(self.corpus, convert_to_tensor=True)
-        return corpus_embeddings
+        return self.embedder.encode(self.corpus, convert_to_tensor=True)
 
     def retrieving(self, query, top_k=5, excluded_tools={}):
         print("Retrieving...")
@@ -38,8 +36,8 @@ class ToolRetriever:
         query_embedding = self.embedder.encode(query, convert_to_tensor=True)
         hits = util.semantic_search(query_embedding, self.corpus_embeddings, top_k=10*top_k, score_function=util.cos_sim)
         retrieved_tools = []
-        for rank, hit in enumerate(hits[0]):
-            category, tool_name, api_name = self.corpus2tool[self.corpus[hit['corpus_id']]].split('\t') 
+        for hit in hits[0]:
+            category, tool_name, api_name = self.corpus2tool[self.corpus[hit['corpus_id']]].split('\t')
             category = standardize_category(category)
             tool_name = standardize(tool_name) # standardizing
             api_name = change_name(standardize(api_name)) # standardizing

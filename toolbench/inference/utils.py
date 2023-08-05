@@ -18,7 +18,7 @@ def softmax_bias(answers,temperature=1):
     sums = 0.0
     answers = [ 10**((cont/temperature)/400) for cont in answers]
     for cont in answers:
-        assert type(cont) == float or type(cont) == int
+        assert type(cont) in [float, int]
         sums += cont
     answers = [ cont/sums for cont in answers]
     return np.array(answers)
@@ -107,26 +107,23 @@ def generate_stream(
             else:
                 out = model(torch.as_tensor([input_ids], device=device), use_cache=True)
                 logits = out.logits
-            past_key_values = out.past_key_values
+        elif model.config.is_encoder_decoder:
+            out = model.decoder(
+                input_ids=torch.as_tensor([[token]], device=device),
+                encoder_hidden_states=encoder_output,
+                use_cache=True,
+                past_key_values=past_key_values,
+            )
+
+            logits = model.lm_head(out[0])
         else:
-            if model.config.is_encoder_decoder:
-                out = model.decoder(
-                    input_ids=torch.as_tensor([[token]], device=device),
-                    encoder_hidden_states=encoder_output,
-                    use_cache=True,
-                    past_key_values=past_key_values,
-                )
-
-                logits = model.lm_head(out[0])
-            else:
-                out = model(
-                    input_ids=torch.as_tensor([[token]], device=device),
-                    use_cache=True,
-                    past_key_values=past_key_values,
-                )
-                logits = out.logits
-            past_key_values = out.past_key_values
-
+            out = model(
+                input_ids=torch.as_tensor([[token]], device=device),
+                use_cache=True,
+                past_key_values=past_key_values,
+            )
+            logits = out.logits
+        past_key_values = out.past_key_values
         if logits_processor:
             if repetition_penalty > 1.0:
                 tmp_output_ids = torch.as_tensor([output_ids], device=logits.device)
@@ -148,10 +145,7 @@ def generate_stream(
 
         output_ids.append(token)
 
-        if token in stop_token_ids:
-            stopped = True
-        else:
-            stopped = False
+        stopped = token in stop_token_ids
         if i == 0 and force_generate:
             stopped = False
         if i == max_new_tokens - 1 or stopped:

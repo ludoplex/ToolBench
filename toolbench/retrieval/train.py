@@ -68,8 +68,6 @@ word_embedding_model = models.Transformer(args.model_name, max_seq_length=args.m
 pooling_model = models.Pooling(word_embedding_model.get_word_embedding_dimension())
 model = SentenceTransformer(modules=[word_embedding_model, pooling_model])
 
-ir_train_queries = {}
-ir_test_queries = {}
 ir_relevant_docs = {}
 train_samples = []
 
@@ -77,12 +75,11 @@ documents_df = pd.read_csv(os.path.join(data_path, 'corpus.tsv'), sep='\t')
 ir_corpus, _ = process_retrieval_ducoment(documents_df)
 
 train_queries_df = pd.read_csv(os.path.join(data_path, 'train.query.txt'), sep='\t', names=['qid', 'query'])
-for row in train_queries_df.itertuples():
-    ir_train_queries[row.qid] = row.query
+ir_train_queries = {
+    row.qid: row.query for row in train_queries_df.itertuples()
+}
 train_queries_df = pd.read_csv(os.path.join(data_path, 'test.query.txt'), sep='\t', names=['qid', 'query'])
-for row in train_queries_df.itertuples():
-    ir_test_queries[row.qid] = row.query
-
+ir_test_queries = {row.qid: row.query for row in train_queries_df.itertuples()}
 labels_df = pd.read_csv(os.path.join(data_path, 'qrels.train.tsv'), sep='\t', names=['qid', 'useless', 'docid', 'label'])
 for row in labels_df.itertuples():
     sample = InputExample(texts=[ir_train_queries[row.qid], ir_corpus[row.docid]], label=row.label)

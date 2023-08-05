@@ -14,8 +14,7 @@ class ServerEventCallback():
         data = {
             "method_name": method_name,
             "block_id": block_id,
-        }
-        data.update(kwargs)
+        } | kwargs
         self.queue.put(data)
 
     def on_tool_retrieval_start(self):
@@ -67,7 +66,7 @@ class ServerEventCallback():
         """Run when chain starts running."""
         print("on_chain_start method called")
         self.llm_block_id += 1
-        block_id = "llm-" + str(self.llm_block_id)
+        block_id = f"llm-{self.llm_block_id}"
         self.add_to_queue(
             "on_chain_start",
             block_id=block_id,
@@ -97,9 +96,9 @@ class ServerEventCallback():
         """Run when LLM starts running."""
         self.add_to_queue(
             "on_llm_start",
-            block_id="llm-" + str(self.llm_block_id),
+            block_id=f"llm-{str(self.llm_block_id)}",
             messages=messages,
-            depth=depth
+            depth=depth,
         )
         print("on_llm_start method called")
 
@@ -113,9 +112,9 @@ class ServerEventCallback():
         """Run when LLM ends running."""
         self.add_to_queue(
             "on_llm_end",
-            block_id="llm-" + str(self.llm_block_id),
+            block_id=f"llm-{str(self.llm_block_id)}",
             response=response,
-            depth=depth
+            depth=depth,
         )
         print("on_llm_end method called")
 
@@ -123,15 +122,15 @@ class ServerEventCallback():
         """Run when LLM errors."""
         self.add_to_queue(
             "on_llm_error",
-            block_id="llm-" + str(self.llm_block_id),
+            block_id=f"llm-{str(self.llm_block_id)}",
             message=str(error),
-            error=error
+            error=error,
         )
         print("on_llm_error method called")
 
     def on_agent_action(self, action, action_input, depth: int) -> str:
         self.tool_block_id += 1
-        block_id="tool-" + str(self.tool_block_id)
+        block_id = f"tool-{self.tool_block_id}"
         self.add_to_queue(
             "on_agent_action",
             block_id=block_id,
@@ -152,11 +151,11 @@ class ServerEventCallback():
             print("Key", tool_name, "not found in tool descriptions")
         self.add_to_queue(
             method_name,
-            block_id="tool-" + str(self.tool_block_id),
+            block_id=f"tool-{str(self.tool_block_id)}",
             tool_name=tool_name,
             tool_description=tool_description,
             tool_input=tool_input,
-            depth=depth
+            depth=depth,
         )
         print("on_tool_start method called")
 
@@ -164,10 +163,10 @@ class ServerEventCallback():
         method_name = "on_tool_end"
         self.add_to_queue(
             method_name,
-            block_id="tool-" + str(self.tool_block_id),
+            block_id=f"tool-{str(self.tool_block_id)}",
             output=output,
-            status= status,
-            depth=depth
+            status=status,
+            depth=depth,
         )
         print("on_tool_end method called")
 

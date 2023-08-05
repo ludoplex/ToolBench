@@ -78,7 +78,7 @@ if __name__=='__main__':
                                             *[subset+'_StdError' for subset in evalset.keys()]])
     def print_and_save_leaderboard(leaderboard):
         leaderboard.sort_values(axis=0,by='WinRate',ascending=False,inplace=True)
-        print('###### Leaderboard vs {} ######'.format(args.ref_method))
+        print(f'###### Leaderboard vs {args.ref_method} ######')
         print(leaderboard)
         leaderboard.to_csv(leaderboard_filepath,index=False)
     print_and_save_leaderboard(leaderboard)
@@ -116,15 +116,13 @@ if __name__=='__main__':
             ref_ans,
             ans)
         return qid,ret
-    def get_most_preferred(d:list)->np.ndarray:
-        if np.iterable(d):
-            d = np.asanyarray(d)
-            bins = np.bincount(d)
-            max_val = np.max(bins)
-            argmax = np.where(max_val==bins)[0]
-            return argmax
-        else:
+    def get_most_preferred(d:list) -> np.ndarray:
+        if not np.iterable(d):
             return np.asarray([d])
+        d = np.asanyarray(d)
+        bins = np.bincount(d)
+        max_val = np.max(bins)
+        return np.where(max_val==bins)[0]
 
 
     pref_dict_filepath = os.path.join(args.leaderboard_folder,'###'.join(['total_pref_dict',args.evalset,args.evaluator,args.ref_method,args.method])+'.npy')

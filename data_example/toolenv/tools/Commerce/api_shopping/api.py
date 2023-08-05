@@ -11,9 +11,9 @@ def get_prices_of_tomatoes(toolbench_rapidapi_key: str='088440d910mshef857391f2f
     "This one will get prices from tomatoes"
     
     """
-    url = f"https://api-shopping.p.rapidapi.com/shopping?item=tomatoes"
+    url = "https://api-shopping.p.rapidapi.com/shopping?item=tomatoes"
     querystring = {}
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "api-shopping.p.rapidapi.com"
@@ -32,9 +32,9 @@ def get_prices_of_bananas(toolbench_rapidapi_key: str='088440d910mshef857391f2fc
     "On this option, you can get a JSON file with the prices of bananas from TESCO"
     
     """
-    url = f"https://api-shopping.p.rapidapi.com/shopping?item=banana"
+    url = "https://api-shopping.p.rapidapi.com/shopping?item=banana"
     querystring = {}
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "api-shopping.p.rapidapi.com"

@@ -20,7 +20,7 @@ def get_company_sponsor_list(start: int, format: str, size: int, s: str=None, t:
         st: Parameter for the company's visa sub-tier
         
     """
-    url = f"https://vispox.p.rapidapi.com/sponsor/"
+    url = "https://vispox.p.rapidapi.com/sponsor/"
     querystring = {'start': start, 'format': format, 'size': size, }
     if s:
         querystring['s'] = s
@@ -34,7 +34,7 @@ def get_company_sponsor_list(start: int, format: str, size: int, s: str=None, t:
         querystring['n'] = n
     if st:
         querystring['st'] = st
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "vispox.p.rapidapi.com"

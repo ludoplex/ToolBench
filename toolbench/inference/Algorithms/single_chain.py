@@ -63,15 +63,12 @@ class single_chain(base_search_method):
         """parse the last try
         Though the nodes are formed as a tree, We still know they are actually a chain
         """
-        json_obj = {}
         tree_obj = self.terminal_node[-1].get_chain_result_from_this_node()
-        json_obj["chain"] = tree_obj
-        json_obj["win"] = self.status == 1
-        return json_obj
+        return {"chain": tree_obj, "win": self.status == 1}
 
     def start(self,single_chain_max_step,pass_at=1,answer=1):
         self.forward_args = locals()
-        if "self" in self.forward_args.keys():
+        if "self" in self.forward_args:
             self.forward_args.pop("self")
 
         for i in range(pass_at):
@@ -93,7 +90,7 @@ class single_chain(base_search_method):
 
     def do_chain(self,now_node,single_chain_max_step):
 
-        if self.start_message_list == None:
+        if self.start_message_list is None:
             system = FORMAT_INSTRUCTIONS_SYSTEM_FUNCTION
             system = system.replace("{task_description}",self.io_func.task_description)
             self.tree.root.messages.append({"role":"system","content":system})
@@ -104,7 +101,7 @@ class single_chain(base_search_method):
         else:
             """In Reflection Algo, we startswith former trials and reflections, so the caller will give the start messages"""
             self.tree.root.messages = self.start_message_list
-        
+
         now_node = self.tree.root
         while True:
             # recursively parse message into nodes
@@ -118,7 +115,7 @@ class single_chain(base_search_method):
                 temp_node.node_type = "Thought"
                 temp_node.description = new_message["content"]
                 child_io_state = deepcopy(now_node.io_state)
-                
+
                 temp_node.io_state = child_io_state
                 temp_node.is_terminal = child_io_state.check_success() != 0 
                 temp_node.messages = now_node.messages.copy()
@@ -137,7 +134,7 @@ class single_chain(base_search_method):
                 temp_node.node_type = "Action"
                 temp_node.description = function_name
                 child_io_state = deepcopy(now_node.io_state)
-                
+
                 temp_node.io_state = child_io_state
                 temp_node.is_terminal = child_io_state.check_success() != 0 
                 temp_node.messages = now_node.messages.copy()
@@ -172,7 +169,7 @@ class single_chain(base_search_method):
                     elif status == 1: # hallucination api name
                         assert "function_call" in new_message.keys()
                         new_message["function_call"]["name"] = "invalid_hallucination_function_name"
-            
+
             now_node.messages.append(new_message)
             if now_node.node_type == "Action Input":
                 now_node.messages.append({
@@ -182,7 +179,7 @@ class single_chain(base_search_method):
                 })
             if now_node.get_depth() >= single_chain_max_step and not (now_node.is_terminal):
                 now_node.pruned = True
-            
+
             if now_node.pruned or now_node.is_terminal:
                 return now_node
 

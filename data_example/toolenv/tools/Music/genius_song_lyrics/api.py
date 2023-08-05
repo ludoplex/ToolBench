@@ -13,11 +13,11 @@ def song_recommendations(is_id: str, text_format: str=None, toolbench_rapidapi_k
         text_format: Format for text bodies related to the document. One or more of `dom`, `plain`, `markdown`, and `html`, separated by commas (defaults to html).
         
     """
-    url = f"https://genius-song-lyrics1.p.rapidapi.com/song/recommendations/"
+    url = "https://genius-song-lyrics1.p.rapidapi.com/song/recommendations/"
     querystring = {'id': is_id, }
     if text_format:
         querystring['text_format'] = text_format
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "genius-song-lyrics1.p.rapidapi.com"
@@ -38,11 +38,11 @@ def song_lyrics(is_id: str, text_format: str=None, toolbench_rapidapi_key: str='
         text_format: Format for text bodies related to the document. One or more of `dom`, `plain`, and `html`, separated by commas (defaults to html).
         
     """
-    url = f"https://genius-song-lyrics1.p.rapidapi.com/song/lyrics/"
+    url = "https://genius-song-lyrics1.p.rapidapi.com/song/lyrics/"
     querystring = {'id': is_id, }
     if text_format:
         querystring['text_format'] = text_format
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "genius-song-lyrics1.p.rapidapi.com"
@@ -65,7 +65,7 @@ def videos(per_page: int=10, text_format: str=None, page: int=1, artist_id: str=
         artist_id: Artist ID
         
     """
-    url = f"https://genius-song-lyrics1.p.rapidapi.com/videos/"
+    url = "https://genius-song-lyrics1.p.rapidapi.com/videos/"
     querystring = {}
     if per_page:
         querystring['per_page'] = per_page
@@ -75,7 +75,7 @@ def videos(per_page: int=10, text_format: str=None, page: int=1, artist_id: str=
         querystring['page'] = page
     if artist_id:
         querystring['artist_id'] = artist_id
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "genius-song-lyrics1.p.rapidapi.com"
@@ -102,7 +102,7 @@ def user_contributions_unreviewed_annotations(is_id: str, per_page: int=10, next
         text_format: Format for text bodies related to the document. One or more of `dom`, `plain`, `markdown`, and `html`, separated by commas (defaults to html).
         
     """
-    url = f"https://genius-song-lyrics1.p.rapidapi.com/user/contributions/unreviewed_annotations/"
+    url = "https://genius-song-lyrics1.p.rapidapi.com/user/contributions/unreviewed_annotations/"
     querystring = {'id': is_id, }
     if per_page:
         querystring['per_page'] = per_page
@@ -112,7 +112,7 @@ def user_contributions_unreviewed_annotations(is_id: str, per_page: int=10, next
         querystring['sort'] = sort
     if text_format:
         querystring['text_format'] = text_format
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "genius-song-lyrics1.p.rapidapi.com"
@@ -135,11 +135,11 @@ def annotation_details(is_id: str, text_format: str=None, toolbench_rapidapi_key
         text_format: Format for text bodies related to the document. One or more of `dom`, `plain`, `markdown`, and `html`, separated by commas (defaults to html).
         
     """
-    url = f"https://genius-song-lyrics1.p.rapidapi.com/annotation/details/"
+    url = "https://genius-song-lyrics1.p.rapidapi.com/annotation/details/"
     querystring = {'id': is_id, }
     if text_format:
         querystring['text_format'] = text_format
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "genius-song-lyrics1.p.rapidapi.com"
@@ -166,7 +166,7 @@ def user_contributions_transcriptions(is_id: str, next_cursor: str=None, text_fo
 - chronologically
         
     """
-    url = f"https://genius-song-lyrics1.p.rapidapi.com/user/contributions/transcriptions/"
+    url = "https://genius-song-lyrics1.p.rapidapi.com/user/contributions/transcriptions/"
     querystring = {'id': is_id, }
     if next_cursor:
         querystring['next_cursor'] = next_cursor
@@ -176,7 +176,7 @@ def user_contributions_transcriptions(is_id: str, next_cursor: str=None, text_fo
         querystring['per_page'] = per_page
     if sort:
         querystring['sort'] = sort
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "genius-song-lyrics1.p.rapidapi.com"
@@ -199,7 +199,7 @@ def user_contributions_suggestions(is_id: str, next_cursor: str=None, per_page: 
         text_format: Format for text bodies related to the document. One or more of `dom`, `plain`, `markdown`, and `html`, separated by commas (defaults to html).
         
     """
-    url = f"https://genius-song-lyrics1.p.rapidapi.com/user/contributions/suggestions/"
+    url = "https://genius-song-lyrics1.p.rapidapi.com/user/contributions/suggestions/"
     querystring = {'id': is_id, }
     if next_cursor:
         querystring['next_cursor'] = next_cursor
@@ -207,7 +207,7 @@ def user_contributions_suggestions(is_id: str, next_cursor: str=None, per_page: 
         querystring['per_page'] = per_page
     if text_format:
         querystring['text_format'] = text_format
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "genius-song-lyrics1.p.rapidapi.com"
@@ -230,7 +230,7 @@ def user_contributions_q_a(is_id: str, text_format: str=None, per_page: int=10, 
         next_cursor: Next cursor
         
     """
-    url = f"https://genius-song-lyrics1.p.rapidapi.com/user/contributions/questions_and_answers/"
+    url = "https://genius-song-lyrics1.p.rapidapi.com/user/contributions/questions_and_answers/"
     querystring = {'id': is_id, }
     if text_format:
         querystring['text_format'] = text_format
@@ -238,7 +238,7 @@ def user_contributions_q_a(is_id: str, text_format: str=None, per_page: int=10, 
         querystring['per_page'] = per_page
     if next_cursor:
         querystring['next_cursor'] = next_cursor
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "genius-song-lyrics1.p.rapidapi.com"
@@ -261,7 +261,7 @@ def user_contributions_pyongs(is_id: str, per_page: int=10, text_format: str=Non
         next_cursor: Next cursor
         
     """
-    url = f"https://genius-song-lyrics1.p.rapidapi.com/user/contributions/pyongs/"
+    url = "https://genius-song-lyrics1.p.rapidapi.com/user/contributions/pyongs/"
     querystring = {'id': is_id, }
     if per_page:
         querystring['per_page'] = per_page
@@ -269,7 +269,7 @@ def user_contributions_pyongs(is_id: str, per_page: int=10, text_format: str=Non
         querystring['text_format'] = text_format
     if next_cursor:
         querystring['next_cursor'] = next_cursor
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "genius-song-lyrics1.p.rapidapi.com"
@@ -296,7 +296,7 @@ def user_contributions_articles(is_id: str, sort: str=None, next_cursor: str=Non
         text_format: Format for text bodies related to the document. One or more of `dom`, `plain`, `markdown`, and `html`, separated by commas (defaults to html).
         
     """
-    url = f"https://genius-song-lyrics1.p.rapidapi.com/user/contributions/articles/"
+    url = "https://genius-song-lyrics1.p.rapidapi.com/user/contributions/articles/"
     querystring = {'id': is_id, }
     if sort:
         querystring['sort'] = sort
@@ -306,7 +306,7 @@ def user_contributions_articles(is_id: str, sort: str=None, next_cursor: str=Non
         querystring['per_page'] = per_page
     if text_format:
         querystring['text_format'] = text_format
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "genius-song-lyrics1.p.rapidapi.com"
@@ -333,7 +333,7 @@ def user_contributions_annotations(is_id: str, text_format: str=None, per_page: 
 - chronologically
         
     """
-    url = f"https://genius-song-lyrics1.p.rapidapi.com/user/contributions/annotations/"
+    url = "https://genius-song-lyrics1.p.rapidapi.com/user/contributions/annotations/"
     querystring = {'id': is_id, }
     if text_format:
         querystring['text_format'] = text_format
@@ -343,7 +343,7 @@ def user_contributions_annotations(is_id: str, text_format: str=None, per_page: 
         querystring['next_cursor'] = next_cursor
     if sort:
         querystring['sort'] = sort
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "genius-song-lyrics1.p.rapidapi.com"
@@ -366,7 +366,7 @@ def user_contributions_all(is_id: str, per_page: int=10, text_format: str=None, 
         next_cursor: Next cursor
         
     """
-    url = f"https://genius-song-lyrics1.p.rapidapi.com/user/contributions/"
+    url = "https://genius-song-lyrics1.p.rapidapi.com/user/contributions/"
     querystring = {'id': is_id, }
     if per_page:
         querystring['per_page'] = per_page
@@ -374,7 +374,7 @@ def user_contributions_all(is_id: str, per_page: int=10, text_format: str=None, 
         querystring['text_format'] = text_format
     if next_cursor:
         querystring['next_cursor'] = next_cursor
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "genius-song-lyrics1.p.rapidapi.com"
@@ -397,7 +397,7 @@ def user_following(is_id: str, per_page: int=10, page: int=1, text_format: str=N
         text_format: Format for text bodies related to the document. One or more of `dom`, `plain`, `markdown`, and `html`, separated by commas (defaults to html).
         
     """
-    url = f"https://genius-song-lyrics1.p.rapidapi.com/user/following/"
+    url = "https://genius-song-lyrics1.p.rapidapi.com/user/following/"
     querystring = {'id': is_id, }
     if per_page:
         querystring['per_page'] = per_page
@@ -405,7 +405,7 @@ def user_following(is_id: str, per_page: int=10, page: int=1, text_format: str=N
         querystring['page'] = page
     if text_format:
         querystring['text_format'] = text_format
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "genius-song-lyrics1.p.rapidapi.com"
@@ -428,7 +428,7 @@ def user_followers(is_id: str, per_page: int=30, page: int=1, text_format: str=N
         text_format: Format for text bodies related to the document. One or more of `dom`, `plain`, `markdown`, and `html`, separated by commas (defaults to html).
         
     """
-    url = f"https://genius-song-lyrics1.p.rapidapi.com/user/followers/"
+    url = "https://genius-song-lyrics1.p.rapidapi.com/user/followers/"
     querystring = {'id': is_id, }
     if per_page:
         querystring['per_page'] = per_page
@@ -436,7 +436,7 @@ def user_followers(is_id: str, per_page: int=30, page: int=1, text_format: str=N
         querystring['page'] = page
     if text_format:
         querystring['text_format'] = text_format
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "genius-song-lyrics1.p.rapidapi.com"
@@ -460,7 +460,7 @@ def user_accomplishments(is_id: str, per_page: int=10, next_cursor: str=None, te
         visibility: `visible` (default) or empty
         
     """
-    url = f"https://genius-song-lyrics1.p.rapidapi.com/user/accomplishments/"
+    url = "https://genius-song-lyrics1.p.rapidapi.com/user/accomplishments/"
     querystring = {'id': is_id, }
     if per_page:
         querystring['per_page'] = per_page
@@ -470,7 +470,7 @@ def user_accomplishments(is_id: str, per_page: int=10, next_cursor: str=None, te
         querystring['text_format'] = text_format
     if visibility:
         querystring['visibility'] = visibility
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "genius-song-lyrics1.p.rapidapi.com"
@@ -491,11 +491,11 @@ def user_details(is_id: str, text_format: str=None, toolbench_rapidapi_key: str=
         text_format: Format for text bodies related to the document. One or more of `dom`, `plain`, `markdown`, and `html`, separated by commas (defaults to html).
         
     """
-    url = f"https://genius-song-lyrics1.p.rapidapi.com/user/details/"
+    url = "https://genius-song-lyrics1.p.rapidapi.com/user/details/"
     querystring = {'id': is_id, }
     if text_format:
         querystring['text_format'] = text_format
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "genius-song-lyrics1.p.rapidapi.com"
@@ -523,7 +523,7 @@ def leaderboard(per_page: int=10, period: str=None, page: int=1, text_format: st
         text_format: Format for text bodies related to the document. One or more of `dom`, `plain`, `markdown`, and `html`, separated by commas (defaults to html).
         
     """
-    url = f"https://genius-song-lyrics1.p.rapidapi.com/leaderboard/"
+    url = "https://genius-song-lyrics1.p.rapidapi.com/leaderboard/"
     querystring = {}
     if per_page:
         querystring['per_page'] = per_page
@@ -533,7 +533,7 @@ def leaderboard(per_page: int=10, period: str=None, page: int=1, text_format: st
         querystring['page'] = page
     if text_format:
         querystring['text_format'] = text_format
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "genius-song-lyrics1.p.rapidapi.com"
@@ -558,7 +558,7 @@ def web_page_referents(raw_annotatable_url: str, annotation_id: str=None, og_url
         page: Page number
         
     """
-    url = f"https://genius-song-lyrics1.p.rapidapi.com/web-page/referents/"
+    url = "https://genius-song-lyrics1.p.rapidapi.com/web-page/referents/"
     querystring = {'raw_annotatable_url': raw_annotatable_url, }
     if annotation_id:
         querystring['annotation_id'] = annotation_id
@@ -572,7 +572,7 @@ def web_page_referents(raw_annotatable_url: str, annotation_id: str=None, og_url
         querystring['page'] = page
     if filter:
         querystring['filter'] = filter
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "genius-song-lyrics1.p.rapidapi.com"
@@ -600,7 +600,7 @@ def chart_albums(page: int=1, time_period: str=None, per_page: int=10, text_form
         text_format: Format for text bodies related to the document. One or more of `dom`, `plain`, `markdown`, and `html`, separated by commas (defaults to html).
         
     """
-    url = f"https://genius-song-lyrics1.p.rapidapi.com/chart/albums/"
+    url = "https://genius-song-lyrics1.p.rapidapi.com/chart/albums/"
     querystring = {}
     if page:
         querystring['page'] = page
@@ -610,7 +610,7 @@ def chart_albums(page: int=1, time_period: str=None, per_page: int=10, text_form
         querystring['per_page'] = per_page
     if text_format:
         querystring['text_format'] = text_format
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "genius-song-lyrics1.p.rapidapi.com"
@@ -646,7 +646,7 @@ def chart_songs(chart_genre: str=None, time_period: str=None, per_page: str='10'
         text_format: Format for text bodies related to the document. One or more of `dom`, `plain`, `markdown`, and `html`, separated by commas (defaults to html).
         
     """
-    url = f"https://genius-song-lyrics1.p.rapidapi.com/chart/songs/"
+    url = "https://genius-song-lyrics1.p.rapidapi.com/chart/songs/"
     querystring = {}
     if chart_genre:
         querystring['chart_genre'] = chart_genre
@@ -658,7 +658,7 @@ def chart_songs(chart_genre: str=None, time_period: str=None, per_page: str='10'
         querystring['page'] = page
     if text_format:
         querystring['text_format'] = text_format
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "genius-song-lyrics1.p.rapidapi.com"
@@ -679,11 +679,11 @@ def annotation_versions(is_id: str, text_format: str=None, toolbench_rapidapi_ke
         text_format: Format for text bodies related to the document. One or more of `dom`, `plain`, `markdown`, and `html`, separated by commas (defaults to html).
         
     """
-    url = f"https://genius-song-lyrics1.p.rapidapi.com/annotation/versions/"
+    url = "https://genius-song-lyrics1.p.rapidapi.com/annotation/versions/"
     querystring = {'id': is_id, }
     if text_format:
         querystring['text_format'] = text_format
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "genius-song-lyrics1.p.rapidapi.com"
@@ -706,7 +706,7 @@ def album_comments(is_id: str, page: int=1, per_page: int=20, text_format: str=N
         text_format: Format for text bodies related to the document. One or more of `dom`, `plain`, `markdown`, and `html`, separated by commas (defaults to html).
         
     """
-    url = f"https://genius-song-lyrics1.p.rapidapi.com/album/comments/"
+    url = "https://genius-song-lyrics1.p.rapidapi.com/album/comments/"
     querystring = {'id': is_id, }
     if page:
         querystring['page'] = page
@@ -714,7 +714,7 @@ def album_comments(is_id: str, page: int=1, per_page: int=20, text_format: str=N
         querystring['per_page'] = per_page
     if text_format:
         querystring['text_format'] = text_format
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "genius-song-lyrics1.p.rapidapi.com"
@@ -737,7 +737,7 @@ def artist_leaderboard(is_id: str, per_page: int=20, page: int=1, text_format: s
         text_format: Format for text bodies related to the document. One or more of `dom`, `plain`, `markdown`, and `html`, separated by commas (defaults to html).
         
     """
-    url = f"https://genius-song-lyrics1.p.rapidapi.com/artist/leaderboard/"
+    url = "https://genius-song-lyrics1.p.rapidapi.com/artist/leaderboard/"
     querystring = {'id': is_id, }
     if per_page:
         querystring['per_page'] = per_page
@@ -745,7 +745,7 @@ def artist_leaderboard(is_id: str, per_page: int=20, page: int=1, text_format: s
         querystring['page'] = page
     if text_format:
         querystring['text_format'] = text_format
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "genius-song-lyrics1.p.rapidapi.com"
@@ -768,7 +768,7 @@ def artist_activity(is_id: str, per_page: int=20, page: int=1, text_format: str=
         text_format: Format for text bodies related to the document. One or more of `dom`, `plain`, `markdown`, and `html`, separated by commas (defaults to html).
         
     """
-    url = f"https://genius-song-lyrics1.p.rapidapi.com/artist/activity/"
+    url = "https://genius-song-lyrics1.p.rapidapi.com/artist/activity/"
     querystring = {'id': is_id, }
     if per_page:
         querystring['per_page'] = per_page
@@ -776,7 +776,7 @@ def artist_activity(is_id: str, per_page: int=20, page: int=1, text_format: str=
         querystring['page'] = page
     if text_format:
         querystring['text_format'] = text_format
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "genius-song-lyrics1.p.rapidapi.com"
@@ -803,7 +803,7 @@ def web_page_lookup(raw_annotatable_url: str, og_url: str=None, canonical_url: s
         text_format: Format for text bodies related to the document. One or more of `dom`, `plain`, `markdown`, and `html`, separated by commas (defaults to html).
         
     """
-    url = f"https://genius-song-lyrics1.p.rapidapi.com/web-page/lookup/"
+    url = "https://genius-song-lyrics1.p.rapidapi.com/web-page/lookup/"
     querystring = {'raw_annotatable_url': raw_annotatable_url, }
     if og_url:
         querystring['og_url'] = og_url
@@ -811,7 +811,7 @@ def web_page_lookup(raw_annotatable_url: str, og_url: str=None, canonical_url: s
         querystring['canonical_url'] = canonical_url
     if text_format:
         querystring['text_format'] = text_format
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "genius-song-lyrics1.p.rapidapi.com"
@@ -840,7 +840,7 @@ def referents(song_id: str='2396871', page: int=None, created_by_id: str=None, t
         web_page_id: ID of a web page to get referents for
         
     """
-    url = f"https://genius-song-lyrics1.p.rapidapi.com/referents/"
+    url = "https://genius-song-lyrics1.p.rapidapi.com/referents/"
     querystring = {}
     if song_id:
         querystring['song_id'] = song_id
@@ -854,7 +854,7 @@ def referents(song_id: str='2396871', page: int=None, created_by_id: str=None, t
         querystring['per_page'] = per_page
     if web_page_id:
         querystring['web_page_id'] = web_page_id
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "genius-song-lyrics1.p.rapidapi.com"
@@ -877,7 +877,7 @@ def album_appearances(is_id: str, page: int=1, per_page: int=20, text_format: st
         text_format: Format for text bodies related to the document. One or more of `dom`, `plain`, `markdown`, and `html`, separated by commas (defaults to html).
         
     """
-    url = f"https://genius-song-lyrics1.p.rapidapi.com/album/appearances/"
+    url = "https://genius-song-lyrics1.p.rapidapi.com/album/appearances/"
     querystring = {'id': is_id, }
     if page:
         querystring['page'] = page
@@ -885,7 +885,7 @@ def album_appearances(is_id: str, page: int=1, per_page: int=20, text_format: st
         querystring['per_page'] = per_page
     if text_format:
         querystring['text_format'] = text_format
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "genius-song-lyrics1.p.rapidapi.com"
@@ -909,7 +909,7 @@ def artist_songs(is_id: str, sort: str=None, page: int=1, per_page: int=20, text
         text_format: Format for text bodies related to the document. One or more of `dom`, `plain`, `markdown`, and `html`, separated by commas (defaults to html).
         
     """
-    url = f"https://genius-song-lyrics1.p.rapidapi.com/artist/songs/"
+    url = "https://genius-song-lyrics1.p.rapidapi.com/artist/songs/"
     querystring = {'id': is_id, }
     if sort:
         querystring['sort'] = sort
@@ -919,7 +919,7 @@ def artist_songs(is_id: str, sort: str=None, page: int=1, per_page: int=20, text
         querystring['per_page'] = per_page
     if text_format:
         querystring['text_format'] = text_format
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "genius-song-lyrics1.p.rapidapi.com"
@@ -942,7 +942,7 @@ def artist_albums(is_id: str, per_page: int=20, page: int=1, text_format: str=No
         text_format: Format for text bodies related to the document. One or more of `dom`, `plain`, `markdown`, and `html`, separated by commas (defaults to html).
         
     """
-    url = f"https://genius-song-lyrics1.p.rapidapi.com/artist/albums/"
+    url = "https://genius-song-lyrics1.p.rapidapi.com/artist/albums/"
     querystring = {'id': is_id, }
     if per_page:
         querystring['per_page'] = per_page
@@ -950,7 +950,7 @@ def artist_albums(is_id: str, per_page: int=20, page: int=1, text_format: str=No
         querystring['page'] = page
     if text_format:
         querystring['text_format'] = text_format
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "genius-song-lyrics1.p.rapidapi.com"
@@ -971,11 +971,11 @@ def artist_details(is_id: str, text_format: str=None, toolbench_rapidapi_key: st
         text_format: Format for text bodies related to the document. One or more of `dom`, `plain`, `markdown`, and `html`, separated by commas (defaults to html).
         
     """
-    url = f"https://genius-song-lyrics1.p.rapidapi.com/artist/details/"
+    url = "https://genius-song-lyrics1.p.rapidapi.com/artist/details/"
     querystring = {'id': is_id, }
     if text_format:
         querystring['text_format'] = text_format
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "genius-song-lyrics1.p.rapidapi.com"
@@ -998,7 +998,7 @@ def search(q: str, per_page: int=10, page: int=1, text_format: str=None, toolben
         text_format: Format for text bodies related to the document. One or more of `dom`, `plain`, `markdown`, and `html`, separated by commas (defaults to html).
         
     """
-    url = f"https://genius-song-lyrics1.p.rapidapi.com/search/"
+    url = "https://genius-song-lyrics1.p.rapidapi.com/search/"
     querystring = {'q': q, }
     if per_page:
         querystring['per_page'] = per_page
@@ -1006,7 +1006,7 @@ def search(q: str, per_page: int=10, page: int=1, text_format: str=None, toolben
         querystring['page'] = page
     if text_format:
         querystring['text_format'] = text_format
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "genius-song-lyrics1.p.rapidapi.com"
@@ -1029,7 +1029,7 @@ def song_comments(is_id: str, text_format: str=None, per_page: int=20, page: int
         page: Paginated offset, (e.g., per_page=5&page=3 returns comments 11–15)
         
     """
-    url = f"https://genius-song-lyrics1.p.rapidapi.com/song/comments/"
+    url = "https://genius-song-lyrics1.p.rapidapi.com/song/comments/"
     querystring = {'id': is_id, }
     if text_format:
         querystring['text_format'] = text_format
@@ -1037,7 +1037,7 @@ def song_comments(is_id: str, text_format: str=None, per_page: int=20, page: int
         querystring['per_page'] = per_page
     if page:
         querystring['page'] = page
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "genius-song-lyrics1.p.rapidapi.com"
@@ -1060,11 +1060,11 @@ def song_details(is_id: str, text_format: str=None, toolbench_rapidapi_key: str=
         text_format: Format for text bodies related to the document. One or more of `dom`, `plain`, `markdown`, and `html`, separated by commas (defaults to html).
         
     """
-    url = f"https://genius-song-lyrics1.p.rapidapi.com/song/details/"
+    url = "https://genius-song-lyrics1.p.rapidapi.com/song/details/"
     querystring = {'id': is_id, }
     if text_format:
         querystring['text_format'] = text_format
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "genius-song-lyrics1.p.rapidapi.com"
@@ -1085,11 +1085,11 @@ def album_details(is_id: str, text_format: str=None, toolbench_rapidapi_key: str
         text_format: Format for text bodies related to the document. One or more of `dom`, `plain`, `markdown`, and `html`, separated by commas (defaults to html).
         
     """
-    url = f"https://genius-song-lyrics1.p.rapidapi.com/album/details/"
+    url = "https://genius-song-lyrics1.p.rapidapi.com/album/details/"
     querystring = {'id': is_id, }
     if text_format:
         querystring['text_format'] = text_format
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "genius-song-lyrics1.p.rapidapi.com"
@@ -1112,7 +1112,7 @@ def multi_search(q: str, per_page: int=3, page: int=1, text_format: str=None, to
         text_format: Format for text bodies related to the document. One or more of `dom`, `plain`, `markdown`, and `html`, separated by commas (defaults to html).
         
     """
-    url = f"https://genius-song-lyrics1.p.rapidapi.com/search/multi/"
+    url = "https://genius-song-lyrics1.p.rapidapi.com/search/multi/"
     querystring = {'q': q, }
     if per_page:
         querystring['per_page'] = per_page
@@ -1120,7 +1120,7 @@ def multi_search(q: str, per_page: int=3, page: int=1, text_format: str=None, to
         querystring['page'] = page
     if text_format:
         querystring['text_format'] = text_format
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "genius-song-lyrics1.p.rapidapi.com"
@@ -1148,7 +1148,7 @@ def chart_referents(page: int=1, time_period: str='day,week,month,all_time', per
         text_format: Format for text bodies related to the document. One or more of `dom`, `plain`, `markdown`, and `html`, separated by commas (defaults to html).
         
     """
-    url = f"https://genius-song-lyrics1.p.rapidapi.com/chart/referents/"
+    url = "https://genius-song-lyrics1.p.rapidapi.com/chart/referents/"
     querystring = {}
     if page:
         querystring['page'] = page
@@ -1158,7 +1158,7 @@ def chart_referents(page: int=1, time_period: str='day,week,month,all_time', per
         querystring['per_page'] = per_page
     if text_format:
         querystring['text_format'] = text_format
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "genius-song-lyrics1.p.rapidapi.com"
@@ -1186,7 +1186,7 @@ def chart_artists(time_period: str=None, page: int=1, per_page: int=10, text_for
         text_format: Format for text bodies related to the document. One or more of `dom`, `plain`, `markdown`, and `html`, separated by commas (defaults to html).
         
     """
-    url = f"https://genius-song-lyrics1.p.rapidapi.com/chart/artists/"
+    url = "https://genius-song-lyrics1.p.rapidapi.com/chart/artists/"
     querystring = {}
     if time_period:
         querystring['time_period'] = time_period
@@ -1196,7 +1196,7 @@ def chart_artists(time_period: str=None, page: int=1, per_page: int=10, text_for
         querystring['per_page'] = per_page
     if text_format:
         querystring['text_format'] = text_format
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "genius-song-lyrics1.p.rapidapi.com"

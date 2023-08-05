@@ -99,7 +99,7 @@ class DFS_tree_search(base_search_method):
             with_filter: This is the difference between normal DFS(with_filter=True) and DFSDT(with_filter=False). 
         """
         self.forward_args = locals()
-        if "self" in self.forward_args.keys():
+        if "self" in self.forward_args:
             self.forward_args.pop("self")
         self.tree = my_tree()
         self.tree.root.node_type = "Action Input"
@@ -124,8 +124,6 @@ class DFS_tree_search(base_search_method):
 
         # this two value declares the rate to go back, Algo degrades to CoT when the value=Inf
         final_answer_back_length = 2
-        prune_back_length = 2
-
         now_node.expand_num = self.now_expand_num
         self.now_expand_num += 1
         if now_node.get_depth() >= single_chain_max_step or now_node.pruned or now_node.is_terminal:
@@ -135,14 +133,13 @@ class DFS_tree_search(base_search_method):
                 return final_answer_back_length
             else:
                 now_node.pruned = True
-                if now_node.observation_code == 4:
-                    self.give_up_node.append(now_node)
-                    return prune_back_length
-                else:
+                if now_node.observation_code != 4:
                     return 1
 
+                self.give_up_node.append(now_node)
+                return 2
         next_tree_split_nodes = []
-        for i in range(tree_beam_size):
+        for _ in range(tree_beam_size):
             temp_now_node = now_node
 
             """If a node have children now, We will prompt the model to generate different nodes than all the existing nodes"""
@@ -165,12 +162,10 @@ class DFS_tree_search(base_search_method):
                         }
                         js_list.append(obj_dict)
 
-                if len(js_list) > 0:
-                    former_candidates_des = former_candidates_des + \
-                        f"{json.dumps(js_list,indent=2)}\n"
+                if js_list:
+                    former_candidates_des += f"{json.dumps(js_list, indent=2)}\n"
                     if temp_now_node.observation != "":
-                        former_candidates_des = former_candidates_des + \
-                            f"again, your former observation: {temp_now_node.observation}\n"
+                        former_candidates_des = f"{former_candidates_des}again, your former observation: {temp_now_node.observation}\n"
                     diverse_prompt = DIVERSITY_PROMPT
                     diverse_prompt = diverse_prompt.replace(
                         "{previous_candidate}", former_candidates_des)
