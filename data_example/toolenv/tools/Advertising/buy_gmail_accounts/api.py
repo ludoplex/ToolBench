@@ -11,9 +11,9 @@ def buy_gmail_accounts_old_new_verified_instant_delivery(toolbench_rapidapi_key:
     "Buy and sell old PVA Gmail accounts in bulk from Storegmail at super low price with 100% money back guarantee. You can buy bulk Gmail accounts or JUST ONE"
     
     """
-    url = f"https://buy-gmail-accounts.p.rapidapi.com/"
+    url = "https://buy-gmail-accounts.p.rapidapi.com/"
     querystring = {}
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "buy-gmail-accounts.p.rapidapi.com"

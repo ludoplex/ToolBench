@@ -12,7 +12,7 @@ for groups_dir in groups_dirs:
     print(method)
     groups_save_dir = os.path.join(save_dir,method)
     os.makedirs(groups_save_dir,exist_ok=True)
-    groups = [os.path.split(g)[1] for g in glob(groups_dir+'/*')]
+    groups = [os.path.split(g)[1] for g in glob(f'{groups_dir}/*')]
     full_answer = {}
     for g in groups:
         print(g)
@@ -30,5 +30,5 @@ for groups_dir in groups_dirs:
             else:
                 answer_dict[qid] = process_valid_data(method,data['answer_generation'])
         json.dump(answer_dict,open(os.path.join(groups_save_dir,f'{g}.json'),'w'))
-        full_answer.update(answer_dict)
+        full_answer |= answer_dict
     # json.dump(full_answer,open(os.path.join(groups_save_dir,f'fullanswer.json'),'w'))

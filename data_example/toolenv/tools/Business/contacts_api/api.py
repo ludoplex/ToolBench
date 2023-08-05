@@ -32,9 +32,9 @@ def home(toolbench_rapidapi_key: str='088440d910mshef857391f2fc461p17ae9ejsnaebc
     "Get all contacts"
     
     """
-    url = f"https://contacts-api.p.rapidapi.com/"
+    url = "https://contacts-api.p.rapidapi.com/"
     querystring = {}
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "contacts-api.p.rapidapi.com"

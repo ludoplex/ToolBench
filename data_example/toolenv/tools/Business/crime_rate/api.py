@@ -11,9 +11,9 @@ def getproductbyslug(toolbench_rapidapi_key: str='088440d910mshef857391f2fc461p1
     " "
     
     """
-    url = f"https://crime-rate1.p.rapidapi.com/product/getProduct/consequatur-id-quod-vel-et-accusantium-suscipit-praesentium-architecto-optio"
+    url = "https://crime-rate1.p.rapidapi.com/product/getProduct/consequatur-id-quod-vel-et-accusantium-suscipit-praesentium-architecto-optio"
     querystring = {}
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "crime-rate1.p.rapidapi.com"
@@ -32,13 +32,13 @@ def getproducts(sort_field: str, sort_direction: str, search: str='Velit', per_p
     " "
     
     """
-    url = f"https://crime-rate1.p.rapidapi.com/product"
+    url = "https://crime-rate1.p.rapidapi.com/product"
     querystring = {'sort_field': sort_field, 'sort_direction': sort_direction, }
     if search:
         querystring['search'] = search
     if per_page:
         querystring['per_page'] = per_page
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "crime-rate1.p.rapidapi.com"

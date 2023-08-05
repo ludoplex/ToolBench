@@ -51,7 +51,7 @@ class OpenAIEvaluator(ToolEvalEvaluator):
             self.conversation_template.append(message)
             
 
-    def openai_completions(self,task_description:Dict,answers:Dict)->int:
+    def openai_completions(self,task_description:Dict,answers:Dict) -> int:
         conversation = deepcopy(self.conversation_template)
         for msg in conversation:
             if msg['role'] == 'user':
@@ -59,13 +59,13 @@ class OpenAIEvaluator(ToolEvalEvaluator):
                     task_description=json.dumps(task_description),
                     answers=json.dumps(answers)
                     )
-        
+
         res = self.opr(messages=conversation,**self.eval_config['completions_kwargs'])
-    
-        prefers = []
-        for choice in res.choices:
-            prefers.append(int(json.loads(choice.message.function_call.arguments)['preference']))
-            
+
+        prefers = [
+            int(json.loads(choice.message.function_call.arguments)['preference'])
+            for choice in res.choices
+        ]
         return random.choice(prefers)
     
 @register_evaluator
@@ -99,12 +99,9 @@ class OpenAINormalizedEvaluator(ToolEvalEvaluator):
         return json.loads(res.choices[0].message.function_call.arguments)
     
 
-    def select_best_final_answer(self,query,final_answers:List[str])->int:
+    def select_best_final_answer(self,query,final_answers:List[str]) -> int:
         hashed_ans = list(map(hash,final_answers))
-        all_same = True
-        for item in hashed_ans[1:]:
-            if item != hashed_ans[0]:
-                all_same = False
+        all_same = all(item == hashed_ans[0] for item in hashed_ans[1:])
         if all_same:
             return random.choice(range(len(final_answers)))
         while True:

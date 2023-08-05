@@ -54,8 +54,11 @@ for query_index, (query_id, query) in enumerate(ir_test_queries.items()):
     relevant_docs_with_scores = {str((doc_id, tool_name_api_name)): {'score': float(score)} for (doc_id, tool_name_api_name), score in zip(relevant_docs, relevant_docs_scores)}
 
     # Count the number of successful matches
-    matches = len(set([doc_id for doc_id, _ in relevant_docs]) & set(ir_relevant_docs[query_id]))
-    
+    matches = len(
+        {doc_id for doc_id, _ in relevant_docs}
+        & set(ir_relevant_docs[query_id])
+    )
+
     # Save query, original docs, top 5 docs with scores, and successful match count
     top_results[query] = {
         'original_docs': [' '.join(ir_corpus[doc_id]) for doc_id in ir_relevant_docs[query_id]],

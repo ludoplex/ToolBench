@@ -46,8 +46,6 @@ def forward_2(
 
     past_key_value = (key_states, value_states) if use_cache else None
     attn_output= F.scaled_dot_product_attention(query_states,key_states,value_states,dropout_p=0.0, is_causal=True)
-    attn_weights = None
-    
     if attn_output.size() != (bsz, self.num_heads, q_len, self.head_dim):
         raise ValueError(
             f"`attn_output` should be of size {(bsz, self.num_heads, q_len, self.head_dim)}, but is"
@@ -59,9 +57,7 @@ def forward_2(
 
     attn_output = self.o_proj(attn_output)
 
-    if not output_attentions:
-        attn_weights = None
-
+    attn_weights = None
     return attn_output, attn_weights, past_key_value
 
 

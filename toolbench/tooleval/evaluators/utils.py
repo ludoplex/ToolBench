@@ -17,7 +17,7 @@ def get_evaluator_cls(clsname):
     try:
         return __registered_evaluators__.get(clsname)
     except:
-        raise ModuleNotFoundError('Cannot find evaluator class {}'.format(clsname))
+        raise ModuleNotFoundError(f'Cannot find evaluator class {clsname}')
 
 
 class OpenaiPoolRequest:

@@ -97,14 +97,13 @@ def dict_shorten(origin: dict, schema: dict):
     for key, value in list(origin.items()):
         if key not in schema:
             del origin[key]
-        else:
-            if isinstance(value, dict):
-                dict_shorten(value, schema[key]) # schema[key] should be a dict
-            elif isinstance(value, list):
-                if value:
-                    if isinstance(value[0], dict):
-                        for item in value:
-                            dict_shorten(item, schema[key][0]) # schema[key] should be a list with only one dict element
+        elif isinstance(value, dict):
+            dict_shorten(value, schema[key]) # schema[key] should be a dict
+        elif isinstance(value, list):
+            if value:
+                if isinstance(value[0], dict):
+                    for item in value:
+                        dict_shorten(item, schema[key][0]) # schema[key] should be a list with only one dict element
     return origin
 
 def observation_shorten(schema_root, response_dict, category, tool_name, api_name, strip_method):
@@ -112,8 +111,17 @@ def observation_shorten(schema_root, response_dict, category, tool_name, api_nam
     if strip_method == "filter" or (strip_method == "random" and random.random() > 0.5):
         if isinstance(response_dict["response"], dict):
             if os.path.exists(os.path.join(schema_root, category)):
-                if os.path.exists(os.path.join(schema_root, category, tool_name+".json")):
-                    schema_dicts = json.load(open(os.path.join(schema_root, category, tool_name+".json"), "r"))
+                if os.path.exists(
+                    os.path.join(schema_root, category, f"{tool_name}.json")
+                ):
+                    schema_dicts = json.load(
+                        open(
+                            os.path.join(
+                                schema_root, category, f"{tool_name}.json"
+                            ),
+                            "r",
+                        )
+                    )
                     api_list = schema_dicts["api_list"]
                     schema = None
                     for schema_dict in api_list:
@@ -137,9 +145,9 @@ def get_rapidapi_response(input_dict: dict, tools_root="data.toolenv.tools", sch
 
     tool_name, standard_category, api_name, code_string = prepare_tool_name_and_url(tools_root, info)
     tool_input = info.tool_input
-    
+
     strip_method = info.strip
-    
+
     try:
         tool_input = json.loads(tool_input)
     except Exception as e:
@@ -147,9 +155,7 @@ def get_rapidapi_response(input_dict: dict, tools_root="data.toolenv.tools", sch
             tool_input = {}
         else:
             print(f"Can not parse tool input into json: {tool_input}")
-            response_dict = {"error": f"Tool input parse error...\n", "response": ""}
-            return response_dict
-    
+            return {"error": f"Tool input parse error...\n", "response": ""}
     input_params_str = ""
     if len(tool_input) > 0:
         for key, value in tool_input.items():
@@ -157,7 +163,7 @@ def get_rapidapi_response(input_dict: dict, tools_root="data.toolenv.tools", sch
                 input_params_str += f'{key}="{value}", '
             else:
                 input_params_str += f'{key}={value}, '
-    
+
     input_params_str += f"toolbench_rapidapi_key='{rapidapi_key}'"
     success_flag, switch_flag, response_dict, save_cache = run(code_string, api_name, input_params_str)
     observation = observation_shorten(schema_root, response_dict, standard_category, tool_name.replace(f"_for_{standard_category}", ""), api_name, strip_method)

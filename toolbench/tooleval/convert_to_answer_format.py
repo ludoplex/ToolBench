@@ -30,37 +30,37 @@ def process_valid_data(method,answer_generation):
     query = answer_generation['query']
     eg = ExecutionGraph()
     last_node = generate_init_message_node(eg,functions,query)
-    
+
     index = 2
     while index < len(conversation):
         message = conversation[index]
         role = message['role']
-        if role == 'system' or role == 'user' or role == 'function':
-            index = index + 1
+        if role in ['system', 'user', 'function']:
+            index += 1
             continue
         elif role == 'assistant':
-            if 'function_call' in message :
+            if 'function_call' in message:
                 node = ExecutionNode(role='tool', message={
                     'name':message['function_call']['name'],
                     'arguments':message['function_call']['arguments'],
                     'response':conversation[index+1]['content'] if message['function_call']['name']!='Finish' else ''
                     })
-                index = index + 1
+                index += 1
             else:
                 node = ExecutionNode(role='assistant',
                                         message=message['content'])
-                
-            
+
+
         else:
             raise NotImplementedError(f'Unkown role {role}')
-        
-        index = index + 1
+
+        index += 1
         eg.add_node(node)
         eg[last_node,node] = None
         last_node = node
-    
+
     eg = eg.reduce_graph_to_sequence()
-    
+
     return {
         'query':query,
         'available_tools':functions,
@@ -80,7 +80,7 @@ def process_invalid_data(method,data_dict):
     if 'CoT' in method:
         trail = random.choice(data_dict["trys"])
 
-        
+
         index = 0
         while index < len(trail['chain']):
             message = trail['chain'][index]
@@ -89,20 +89,20 @@ def process_invalid_data(method,data_dict):
                     'name':message['description'],
                     'arguments':(trail['chain'][index+1]['description']),
                     'response':(trail['chain'][index+1]['observation'])})
-            
-                index = index + 1
+
+                index += 1
             elif message['node_type'] == 'Thought':
                 node = ExecutionNode(role='assistant',
                                         message=message['description'])
             else:
                 raise NotImplementedError(f"Unknown node_type: {message['node_type']}")
-            index = index + 1
+            index += 1
 
             eg.add_node(node)
             eg[last_node,node] = None
             last_node = node
         eg = eg.reduce_graph_to_sequence()
-   
+
     elif 'DFS' in method:
 
         def DFS(root):
@@ -118,10 +118,11 @@ def process_invalid_data(method,data_dict):
                 for child_node in child_nodes:
                     eg.add_edge(root_node,child_node)
                 return root_node
+
         for node in data_dict['tree']['tree']['children']:
             eg[last_node,DFS(node)] = None
 
-        
+
         # purify the graph
         def purify_graph(node:ExecutionNode):
             if node.role == 'Action':
@@ -134,7 +135,7 @@ def process_invalid_data(method,data_dict):
                             'name':node.message['description'],
                             'arguments':(adj_node.message['description']),
                             'response':(adj_node.message['observation'])
-                            
+
                         }
                         # remove adj_node
                         adj_node = eg.pop_node(adj_node)
@@ -148,15 +149,14 @@ def process_invalid_data(method,data_dict):
                 node.message = node.message['description']
             elif node.role == 'Action Input':
                 print('Founding Extra Action Input Node')
-                pass
-            elif node.role =='system' or node.role=='user':
+            elif node.role in ['system', 'user']:
                 pass
             else:
                 raise Exception('Unknown role {}'.format(node.role))
             adj_nodes = eg.get_adjacent_node(node)
             for adj_node in adj_nodes:
                 purify_graph(eg[adj_node])
-            
+
         purify_graph(last_node)
         eg = eg.reduce_graph_to_sequence()
     else:

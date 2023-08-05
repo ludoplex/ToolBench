@@ -11,11 +11,11 @@ def kooed_endpoint_copy(kooed: str=None, toolbench_rapidapi_key: str='088440d910
     "Kooed Radio Stations end point"
     
     """
-    url = f"https://kooed.p.rapidapi.com/"
+    url = "https://kooed.p.rapidapi.com/"
     querystring = {}
     if kooed:
         querystring['Kooed'] = kooed
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "kooed.p.rapidapi.com"
@@ -34,11 +34,11 @@ def kooed_endpoint(kooed: str=None, toolbench_rapidapi_key: str='088440d910mshef
     "Kooed Radio Stations end point"
     
     """
-    url = f"https://kooed.p.rapidapi.com/"
+    url = "https://kooed.p.rapidapi.com/"
     querystring = {}
     if kooed:
         querystring['Kooed'] = kooed
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "kooed.p.rapidapi.com"

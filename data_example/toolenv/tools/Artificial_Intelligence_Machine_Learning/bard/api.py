@@ -12,9 +12,9 @@ def ask(question: str, bard_secure_1psid_cookie_value: str, toolbench_rapidapi_k
     bard_secure_1psid_cookie_value: A string representing your bard __Secure-1PSID cookie (You can get your __Secure-1PSID cookie by simply accessing Developer Consolle and search for __Secure-1PSID  cookie Name https://i.ibb.co/5WHmCQ8/Screenshot-2023-05-30-231728-1.png )
         
     """
-    url = f"https://bard1.p.rapidapi.com/ask"
+    url = "https://bard1.p.rapidapi.com/ask"
     querystring = {'question': question, 'bard___Secure-1PSID_cookie_value': bard_secure_1psid_cookie_value, }
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "bard1.p.rapidapi.com"

@@ -17,14 +17,11 @@ if __name__=='__main__':
 
     def get_size(node):
         size = 1
-        if len(node["children"]) == 0:
-            node["size"] = size
-            return size
-        else:
+        if len(node["children"]) != 0:
             for child in node["children"]:
                 size += get_size(child)
-            node["size"] = size
-            return size
+        node["size"] = size
+        return size
     def get_leaf_node_count(node):
         '''
         返回值：叶子节点数，最大Elo积分，总子节点树，Thought节点数, 选择最左数量，选择后几个数量
@@ -32,37 +29,34 @@ if __name__=='__main__':
         thought_count = (1 if node["node_type"] == "Thought" else 0)
         if len(node["children"]) == 0:
             return (1 if node["expand_num"] != 0 else 0), node["Elo"], 1, thought_count
-        else:
-            result = 0
-            max_elo = -1e7
-            node_count = 1
-            for child in node["children"]:
-                child_left_node_count, child_max_elo, child_node_count, child_thought_count = get_leaf_node_count(child)
-                result += child_left_node_count
-                node_count += child_node_count
-                thought_count += child_thought_count
-                max_elo = max(max_elo,child_max_elo)
-            return result, max_elo, node_count, thought_count
+        result = 0
+        max_elo = -1e7
+        node_count = 1
+        for child in node["children"]:
+            child_left_node_count, child_max_elo, child_node_count, child_thought_count = get_leaf_node_count(child)
+            result += child_left_node_count
+            node_count += child_node_count
+            thought_count += child_thought_count
+            max_elo = max(max_elo,child_max_elo)
+        return result, max_elo, node_count, thought_count
 
     def recursive_get_error_code(obj):
         result = []
         if type(obj) == dict:
             for key,value in obj.items():
-                if key == "observation_code":
-                    assert type(value) == int
-                    # assert "observation" in obj.keys()
-                    if "observation" in obj.keys() and "html" in str(obj["observation"]).lower():
-                        result = result + ["html"]
-                    else:
-                        result = result + [value]
-
-                    # if value == -1:
-                    #     print(obj["description"])
-
-                elif key == "description":
+                if key == "description":
                     if "OpenAI service is unavailable" in value:
                         result = result + ["openai"]
                         # print("hello")
+                elif key == "observation_code":
+                    assert type(value) == int
+                    # assert "observation" in obj.keys()
+                    result = (
+                        result + ["html"]
+                        if "observation" in obj.keys()
+                        and "html" in str(obj["observation"]).lower()
+                        else result + [value]
+                    )
                 else:
                     # print(f"in {key}")
                     result = result + recursive_get_error_code(value)
@@ -74,10 +68,7 @@ if __name__=='__main__':
 
     def check_real_valid(string):
         fake_true_vocab = ["sorry","apologize","apology","unfortunately","couldn't"]
-        for word in fake_true_vocab:
-            if word in string.lower():
-                return False
-        return True
+        return all(word not in string.lower() for word in fake_true_vocab)
 
     for file in os.listdir(input_dir):
         if "result" in file:
@@ -252,13 +243,13 @@ if __name__=='__main__':
         zip_value = list(zip(xs,yss[0]))
         zip_value.sort(key = lambda x: x[0])
 
-        threshold =  []
-        for i in range(N):
-            threshold.append(zip_value[min(((i+1)*len(xs))//(N),len(zip_value)-1)][0])
-
+        threshold = [
+            zip_value[min(((i + 1) * len(xs)) // (N), len(zip_value) - 1)][0]
+            for i in range(N)
+        ]
         bucket = [[] for _ in range(N)]
         for cont in bucket:
-            for i in range(len(yss)):
+            for _ in range(len(yss)):
                 cont.append([])
         for k,ys in enumerate(yss):
             for x,y in zip(xs,ys):
@@ -266,14 +257,13 @@ if __name__=='__main__':
                     if x < threshold[i]:
                         bucket[i][k].append(y)
                         break
-        for i in range(len(bucket)):
-            for k in range(len(bucket[i])):
-                bucket[i][k] = np.mean(np.array(bucket[i][k]))
+        for item in bucket:
+            for k in range(len(item)):
+                item[k] = np.mean(np.array(item[k]))
         return bucket
 
     def print_table(table):
-        methods = list((table.keys()))
-        methods.sort()
+        methods = sorted(table.keys())
         column_names =  ["method"]+list(table[methods[0]].keys())
         for key in table.keys():
             table[key]["method"] = key
@@ -286,22 +276,30 @@ if __name__=='__main__':
             for method in methods:
                 now_max = max(now_max, len(str(table[method][key])))
             key_length[key] = now_max
-        
+
         for key in column_names:
             if key in ["root/max_Elo","valid_per_data"]:
                 continue
             # print(key,end=" "*(key_length[key]- len(key))+"|")    
 
         mode = input_dir[len(input_dir[::-1][input_dir[::-1].find("/"):][::-1]):]
-    
+
         for cnt, method in enumerate(methods):
             for cnt_key, key in enumerate(column_names):
                 if key in ["root/max_Elo","valid_per_data"]:
                     continue
                 if cnt == 0 and cnt_key == 0:
-                    print(mode + "|" + str(table[method][key]),end=" "*(key_length[key]- len(str(table[method][key])))+"|")    
+                    print(
+                        f"{mode}|{str(table[method][key])}",
+                        end=" " * (key_length[key] - len(str(table[method][key])))
+                        + "|",
+                    )
                 else:
-                    print(str(table[method][key]),end=" "*(key_length[key]- len(str(table[method][key])))+"|")    
+                    print(
+                        table[method][key],
+                        end=" " * (key_length[key] - len(str(table[method][key])))
+                        + "|",
+                    )
             print("")
 
     print_table(method2result)

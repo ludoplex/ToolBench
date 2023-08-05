@@ -24,11 +24,11 @@ class Model:
         self.pipeline = pipeline_runner(self.args, add_retrieval=False, server=True)
         print("Loading model...")
         self.llm = self.pipeline.get_backbone_model()
-        print("Model loaded in {} seconds".format(time.time() - starting_time))
+        print(f"Model loaded in {time.time() - starting_time} seconds")
         starting_time = time.time()
         print("Loading retriever...")
         self.retriever = self.pipeline.get_retriever()
-        print("Retriever loaded in {} seconds".format(time.time() - starting_time))
+        print(f"Retriever loaded in {time.time() - starting_time} seconds")
         self.query_id = 0
         # self.process_num = self.args.process_num
 
@@ -91,8 +91,7 @@ class Model:
         parser.add_argument('--rapidapi_key', type=str, default="",required=False, help='your rapidapi key to request rapidapi service')
         parser.add_argument('--use_rapidapi_key', action="store_true", help="To use customized rapidapi service or not.")
 
-        args = parser.parse_args()
-        return args
+        return parser.parse_args()
 
 model = Model()
 
@@ -115,7 +114,6 @@ def stream():
                 "method_name": "error",
                 "error": "Model in use"
             }), status=409, mimetype='application/json')
-            return
         model.inuse = True
 
         # run model.run_agent in the background

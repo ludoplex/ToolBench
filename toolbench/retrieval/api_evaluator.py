@@ -90,14 +90,18 @@ class APIEvaluator(SentenceEvaluator):
 
     def __call__(self, model, output_path: str = None, epoch: int = -1, steps: int = -1, *args, **kwargs) -> float:
         if epoch != -1:
-            out_txt = " after epoch {}:".format(epoch) if steps == -1 else " in epoch {} after {} steps:".format(epoch, steps)
+            out_txt = (
+                f" after epoch {epoch}:"
+                if steps == -1
+                else f" in epoch {epoch} after {steps} steps:"
+            )
         else:
             out_txt = ":"
-        logger.info("Information Retrieval Evaluation" + out_txt)
+        logger.info(f"Information Retrieval Evaluation{out_txt}")
 
         #scores = self.compute_metrices(model)
         avg_ndcg = self.compute_metrices(model)
-        
+
         # Write results to disc
         if output_path is not None and self.write_csv:
             csv_path = os.path.join(output_path, self.csv_file)
@@ -108,8 +112,7 @@ class APIEvaluator(SentenceEvaluator):
             else:
                 fOut = open(csv_path, mode="a", encoding="utf-8")
 
-            output_data = [epoch, steps]
-            output_data.append(avg_ndcg)
+            output_data = [epoch, steps, avg_ndcg]
             # for k in self.accuracy_at_k:
             #     output_data.append(scores[k])
 
@@ -143,13 +146,16 @@ class APIEvaluator(SentenceEvaluator):
                     corpus_id = self.corpus_ids[corpus_start_idx + sub_corpus_id]
                     queries_result_list[query_itr].append({'corpus_id': corpus_id, 'score': score})
 
-        for query_itr in range(len(queries_result_list)):
-            for doc_itr in range(len(queries_result_list[query_itr])):
-                score, corpus_id = queries_result_list[query_itr][doc_itr]['score'], queries_result_list[query_itr][doc_itr]['corpus_id']
-                queries_result_list[query_itr][doc_itr] = {'corpus_id': corpus_id, 'score': score}
+        for queriesresult in queries_result_list:
+            for doc_itr in range(len(queriesresult)):
+                score, corpus_id = (
+                    queriesresult[doc_itr]['score'],
+                    queriesresult[doc_itr]['corpus_id'],
+                )
+                queriesresult[doc_itr] = {'corpus_id': corpus_id, 'score': score}
 
-        logger.info("Queries: {}".format(len(self.queries)))
-        logger.info("Corpus: {}\n".format(len(self.corpus)))
+        logger.info(f"Queries: {len(self.queries)}")
+        logger.info(f"Corpus: {len(self.corpus)}\n")
 
         # Compute scores
         scores = self.compute_metrics(queries_result_list)

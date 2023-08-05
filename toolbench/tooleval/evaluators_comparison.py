@@ -16,15 +16,13 @@ abs_dir = os.path.split(__file__)[0]
 annotated_data = json.load(open(os.path.join(abs_dir,'dataset/human_cross_annotated_data.json')))
 NUM_WORKERS=16
 
-def get_most_preferred(d:list)->np.ndarray:
-    if np.iterable(d):
-        d = np.asanyarray(d)
-        bins = np.bincount(d)
-        max_val = np.max(bins)
-        argmax = np.where(max_val==bins)[0]
-        return argmax
-    else:
+def get_most_preferred(d:list) -> np.ndarray:
+    if not np.iterable(d):
         return np.asarray([d])
+    d = np.asanyarray(d)
+    bins = np.bincount(d)
+    max_val = np.max(bins)
+    return np.where(max_val==bins)[0]
     
 def agreement_score(x,ref:list)->float:
     majority_x = get_most_preferred(x)

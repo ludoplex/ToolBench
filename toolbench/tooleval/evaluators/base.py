@@ -60,18 +60,25 @@ class BaseEvaluator:
         ans1, ans2 = process_answer(ans1), process_answer(ans2)
         available_tools = process_tools(available_tools)
         if not multisample:
+            return (
+                self.fn_completions(
+                    {'query': query, 'available_tools': available_tools},
+                    [ans1, ans2],
+                )
+                if random.random() < 0.5
+                else 1
+                - self.fn_completions(
+                    {'query': query, 'available_tools': available_tools},
+                    [ans2, ans1],
+                )
+            )
+        prefers = []
+        for _ in range(sample_n):
             if random.random() < 0.5:
-                return self.fn_completions({'query': query, 'available_tools': available_tools}, [ans1, ans2])
+                prefers.append(self.fn_completions(
+                    {'query': query, 'available_tools': available_tools}, [ans1, ans2]))
             else:
-                return 1 - self.fn_completions({'query': query, 'available_tools': available_tools}, [ans2, ans1])
-        else:
-            prefers = []
-            for i in range(sample_n):
-                if random.random() < 0.5:
-                    prefers.append(self.fn_completions(
-                        {'query': query, 'available_tools': available_tools}, [ans1, ans2]))
-                else:
-                    prefers.append(1 - self.fn_completions(
-                        {'query': query, 'available_tools': available_tools}, [ans2, ans1]))
-            return prefers
+                prefers.append(1 - self.fn_completions(
+                    {'query': query, 'available_tools': available_tools}, [ans2, ans1]))
+        return prefers
 

@@ -86,15 +86,13 @@ if __name__=='__main__':
             ref_ans,
             ans)
         return qid,ret
-    def get_most_preferred(d:list)->np.ndarray:
-        if np.iterable(d):
-            d = np.asanyarray(d)
-            bins = np.bincount(d)
-            max_val = np.max(bins)
-            argmax = np.where(max_val==bins)[0]
-            return argmax
-        else:
+    def get_most_preferred(d:list) -> np.ndarray:
+        if not np.iterable(d):
             return np.asarray([d])
+        d = np.asanyarray(d)
+        bins = np.bincount(d)
+        max_val = np.max(bins)
+        return np.where(max_val==bins)[0]
     
     print('Evaluating...')
     prefer_dict = {}

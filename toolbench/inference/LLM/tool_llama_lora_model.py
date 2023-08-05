@@ -34,8 +34,8 @@ class ToolLLaMALoRA:
             torch_dtype=torch.float16,
         )
         self.tokenizer.pad_token = self.tokenizer.unk_token
-        
-        self.use_gpu = (True if device == "cuda" else False)
+
+        self.use_gpu = device == "cuda"
         if (device == "cuda" and not cpu_offloading) or device == "mps":
             self.model.to(device)
         self.chatio = SimpleChatIO()
@@ -53,8 +53,7 @@ class ToolLLaMALoRA:
         generate_stream_func = generate_stream
         output_stream = generate_stream_func(self.model, self.tokenizer, gen_params, "cuda", 8192, force_generate=True)
         outputs = self.chatio.return_output(output_stream)
-        prediction = outputs.strip()
-        return prediction
+        return outputs.strip()
         
     def add_message(self, message):
         self.conversation_history.append(message)
@@ -73,7 +72,7 @@ class ToolLLaMALoRA:
         for message in self.conversation_history:
             print_obj = f"{message['role']}: {message['content']} "
             if "function_call" in message.keys():
-                print_obj = print_obj + f"function_call: {message['function_call']}"
+                print_obj = f"{print_obj}function_call: {message['function_call']}"
             print_obj += ""
             print(
                 colored(
@@ -87,7 +86,7 @@ class ToolLLaMALoRA:
         conv = get_conversation_template(self.template)
         if self.template == "tool-llama":
             roles = {"human": conv.roles[0], "gpt": conv.roles[1]}
-        elif self.template == "tool-llama-single-round" or self.template == "tool-llama-multi-rounds":
+        elif self.template in ["tool-llama-single-round", "tool-llama-multi-rounds"]:
             roles = {"system": conv.roles[0], "user": conv.roles[1], "function": conv.roles[2], "assistant": conv.roles[3]}
 
         self.time = time.time()
@@ -100,15 +99,11 @@ class ToolLLaMALoRA:
                 content = process_system_message(content, functions)
             prompt += f"{role}: {content}\n"
         prompt += "Assistant:\n"
-        if functions != []:
-            predictions = self.prediction(prompt)
-        else:
-            predictions = self.prediction(prompt)
-
+        predictions = self.prediction(prompt)
         decoded_token_len = len(self.tokenizer(predictions))
         if process_id == 0:
             print(f"[process({process_id})]total tokens: {decoded_token_len}")
-        
+
         # react format prediction
         thought, action, action_input = react_parser(predictions)
         message = {

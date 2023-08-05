@@ -13,9 +13,9 @@ def ask(bard_secure_1psid_cookie_value: str, question: str, toolbench_rapidapi_k
         question: A string representing the question your would like to ask
         
     """
-    url = f"https://bard-api.p.rapidapi.com/ask"
+    url = "https://bard-api.p.rapidapi.com/ask"
     querystring = {'bard___Secure-1PSID_cookie_value': bard_secure_1psid_cookie_value, 'question': question, }
-    
+
     headers = {
             "X-RapidAPI-Key": toolbench_rapidapi_key,
             "X-RapidAPI-Host": "bard-api.p.rapidapi.com"

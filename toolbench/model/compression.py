@@ -184,9 +184,7 @@ def decompress(packed_data, config):
         data = data / scale
         data += mn
 
-    # Unpad
-    pad_len = group_size - original_shape[group_dim] % group_size
-    if pad_len:
+    if pad_len := group_size - original_shape[group_dim] % group_size:
         padded_original_shape = (
             original_shape[:group_dim]
             + (original_shape[group_dim] + pad_len,)

@@ -60,13 +60,13 @@ def standardize(string):
         else:
             break
     if string[0].isdigit():
-        string = "get_" + string
+        string = f"get_{string}"
     return string
 
 def change_name(name):
     change_list = ["from", "class", "return", "false", "true", "id", "and"]
     if name in change_list:
-        name = "is_" + name
+        name = f"is_{name}"
     return name
 
 # code adapted from https://huggingface.co/kaiokendev/superhot-13b-8k-no-rlhf-test/blob/main/llama_rope_scaled_monkey_patch.py
